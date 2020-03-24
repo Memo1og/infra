@@ -1,0 +1,24 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "memolog-test1",
+      "image_name": "reddit-base-{{timestamp}}",
+      "source_image": "ubuntu-1604-xenial-v20200317",
+      "zone": "europe-west6-b",
+      "ssh_username": "appuser",
+      "machine_type": "g1-small"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/setupruby.sh"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/setupmongodb.sh",
+      "execute_command": "sudo {{.Path}}"
+    }
+  ]
+}
