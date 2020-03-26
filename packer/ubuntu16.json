@@ -8,7 +8,7 @@
     {
       "type": "googlecompute",
       "project_id": "{{ user `project_id` }}",
-      "image_name": "reddit-base-{{timestamp}}",
+      "image_name": "reddit-base-tf-2",
       "source_image": "{{ user `source_image` }}",
       "zone": "europe-west6-b",
       "ssh_username": "appuser",
@@ -29,12 +29,6 @@
       "type": "shell",
       "script": "scripts/setupmongodb.sh",
       "execute_command": "sudo {{.Path}}"
-    },
-    {
-      "type": "shell",
-      "script": "scripts/deploy.sh",
-      "execute_command": "sudo {{.Path}}"
     }
   ]
 }
-
