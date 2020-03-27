@@ -1,0 +1,6 @@
+project = "infra-memolog"
+public_key_path = "~/.ssh/appuser.pub"
+private_key_path = "~/.ssh/appuser"
+region = "europe-west6"
+app_disk_image = "reddit-app"
+db_disk_image = "reddit-db"
