@@ -1,0 +1,6 @@
+{
+  "project_id": "infra-memolog",
+  "source_image": "ubuntu-1604-xenial-v20200317",
+  "machine_type": "g1-small"
+}
+
