@@ -5,7 +5,8 @@ resource "google_compute_firewall" "firewall_mongo" {
     protocol = "tcp"
     ports = ["27017"]
   }
-  target_tags = ["reddit-db", "reddit-app"]
+  target_tags = ["reddit-db"]
+  source_tags = ["reddit-app"]
 }
 resource "google_compute_firewall" "firewall_puma" {
   name = "allow-puma-default"
