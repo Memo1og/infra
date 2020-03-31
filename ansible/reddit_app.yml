@@ -1,0 +1,74 @@
+# Setup and configure ruby things for reddit app
+- name: "Reddit App: Configure app environment"
+  hosts: all
+  gather_facts: no
+  become: yes
+  vars_files:
+    - /home/user/infra/ansible/vars
+  tasks:
+    
+    # Install Ruby
+    - name: Install ruby and rubygems and required packages
+      apt: "name={{ item }} state=present"
+      with_items:
+        - ruby-full
+        - ruby-dev
+        - build-essential
+
+    - name: Install Ruby bundler
+      gem:
+        name: bundler
+        state: present
+        user_install: no
+
+    - name: Add MongoDB key
+      command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E52529D4
+
+    - name: Add MongoDB repository
+      command: bash -c 'echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-4.0.list'
+
+    - name: Update repository
+      command: apt-get update
+
+    - name: Install MongoDB
+      command: apt-get install mongodb-org -y
+
+    - name: Mongod start
+      command: systemctl start mongod
+
+    - name: Mongod enable
+      command: systemctl enable mongod
+
+    - name: Mongod status
+      command: systemctl status mongod
+
+    # Deploy application
+    - name: Clone reddit repository
+      command: git clone https://github.com/Artemmkin/reddit.git
+      args:
+        chdir: /home/{{ username }}/
+      become: no
+
+    - name: Change owner
+      command: chown -R {{ username }}{{':'}}{{ username }} reddit
+      args:
+        chdir: /home/{{ username }}/
+      become: yes
+
+    - name: Install bundle into reddit folder
+      command: bundle install
+      args:
+        chdir: /home/{{ username }}/reddit/
+      become: no
+
+    - name: Reload Puma
+      command: puma -d
+      args:
+        chdir: /home/{{ username }}/reddit/
+      become: no
+
+    - name: Status Puma
+      shell: ps aux | grep puma
+      args:
+        chdir: /home/{{ username }}/reddit/
+      become: no
