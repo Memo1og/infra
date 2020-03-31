@@ -1,0 +1,36 @@
+# Setup and configure ruby things for reddit app
+- name: "Reddit App: Configure app environment"
+  hosts: all
+  gather_facts: no
+#  become: yes
+  vars_files:
+    - /home/user/infra/ansible/vars
+  tasks:
+
+    - name: rm
+      command: rm -rf .rvm
+      args:
+        chdir: /home/{{ username }}/
+      become: yes
+
+    - name: Add rvm repository (step 1.1)
+      command: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+
+    - name: Add rvm repository (step 1.2)
+      command: gpg --keyserver hkp://keys.gnupg.net  --recv-keys 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
+    # Install Ruby
+    - name: Add rvm repository (step 2)
+      shell: \curl -sSL https://get.rvm.io | bash -s stable --ruby
+      args:
+        chdir: /home/{{ username }}/
+
+#    - name: Add rvm repository (step 2)
+#      shell: source /home/{{ username }}/.rvm/scripts/rvm
+#      args:
+#        chdir: /usr/local/rvm/scripts/
+
+    - name: Install rubygems
+      command: source .rvm/scripts/rvm
+      args:
+        chdir: /home/{{ username }}/
